@@ -416,7 +416,27 @@ async function createJacaiServer() {
       return reply(result, msg);
     }
   );
+server.registerTool(
+  "get_draft_details",
+  {
+    title: "Get Draft Details",
+    description: "Fetch an existing Jacai draft by draft_id, slug, or title.",
+    inputSchema: {
+      draft_id: z.number().int().optional(),
+      slug: z.string().optional(),
+      title: z.string().optional(),
+    },
+  },
+  async (args) => {
+    const result = await postJson("/api/tool_get_draft_details.php", args);
 
+    const msg = result.ok
+      ? `Fetched draft ${result.draft_id}.`
+      : `Failed to fetch draft: ${result.error || "Unknown error"}`;
+
+    return reply(result, msg);
+  }
+);
   // ---------------------------------------------------------------------------
   // AUTO-LOAD REMAINING SMM TOOLS
   // ---------------------------------------------------------------------------
